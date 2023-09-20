@@ -64,3 +64,25 @@ class ObjectDetection(ABC):
     def predict(self,frame: np.ndarray) -> BoundingBoxes:
         pass
     
+class Yolo(ObjectDetection):
+    
+    def __init__(self, model_path: str):
+        super().__init__(model_path)
+    
+    def load_model(self, model_path) -> YOLO:
+        model = YOLO(model_path)
+        model.fuse()
+        return model
+    
+    def predict(self,frame: np.ndarray) -> BoundingBoxes:
+        preds = self.model(frame)[0]
+
+        result = BoundingBoxes(preds.boxes.data, frame.shape[:2], preds.names)
+
+        if self.device == 'cuda':
+            result.cuda()
+        else:
+            result.cpu()
+
+        return result
+    
