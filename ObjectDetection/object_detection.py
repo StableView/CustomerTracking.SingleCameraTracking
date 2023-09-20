@@ -9,6 +9,7 @@ import numpy as np
 from ultralytics import YOLO
 from ultralytics.engine.results import Boxes
 
+
 class BoundingBoxes:
 
     def __init__(self, boxes: Tensor, orig_shape: tuple[int], names: Dict[int,str]):
@@ -64,6 +65,58 @@ class ObjectDetection(ABC):
     def predict(self,frame: np.ndarray) -> BoundingBoxes:
         pass
     
+
+class Colors:
+
+    def __init__(self):
+        """Initialize colors as hex = matplotlib.colors.TABLEAU_COLORS.values()."""
+        hexs = ('FF3838', 'FF9D97', 'FF701F', 'FFB21D', 'CFD231', '48F90A', '92CC17', '3DDB86', '1A9334', '00D4BB',
+                '2C99A8', '00C2FF', '344593', '6473FF', '0018EC', '8438FF', '520085', 'CB38FF', 'FF95C8', 'FF37C7')
+        self.palette = [self.hex2rgb(f'#{c}') for c in hexs]
+        self.n = len(self.palette)
+
+    def __call__(self, i, bgr=False):
+        """Converts hex color codes to RGB values."""
+        c = self.palette[int(i) % self.n]
+        return (c[2], c[1], c[0]) if bgr else c
+
+    @staticmethod
+    def hex2rgb(h):
+        """Converts hex color codes to RGB values (i.e. default PIL order)."""
+        return tuple(int(h[1 + i:1 + i + 2], 16) for i in (0, 2, 4))
+
+
+class Annotator:
+    
+    def __init__(self, im):
+        assert im.data.contiguous, 'Image not contiguous. Apply np.ascontiguousarray(im) to Annotator() input images.'
+        self.im = im
+        self.lw = max(round(sum(im.shape) / 2 * 0.003), 2)  # line width
+
+    def box_label(self, box, label='', color=(128, 128, 128)):
+        """Add one xyxy box to image with label."""
+        if isinstance(box, Tensor):
+            box = box.tolist()
+
+        p1, p2 = (int(box[0]), int(box[1])), (int(box[2]), int(box[3]))
+        cv2.rectangle(self.im, p1, p2, color, thickness=self.lw, lineType=cv2.LINE_AA)
+        if label:
+            tf = max(self.lw - 1, 1)  # font thickness
+            w, h = cv2.getTextSize(label, 0, fontScale=self.lw / 3, thickness=tf)[0]  # text width, height
+            outside = p1[1] - h >= 3
+            p2 = p1[0] + w, p1[1] - h - 3 if outside else p1[1] + h + 3
+            cv2.rectangle(self.im, p1, p2, color, -1, cv2.LINE_AA)  # filled
+            cv2.putText(self.im,
+                        label, (p1[0], p1[1] - 2 if outside else p1[1] + h + 2),
+                        0,
+                        self.lw / 3,
+                        (255, 255, 255),
+                        thickness=tf,
+                        lineType=cv2.LINE_AA)
+
+colors = Colors()
+
+
 class Yolo(ObjectDetection):
     
     def __init__(self, model_path: str):
@@ -86,3 +139,14 @@ class Yolo(ObjectDetection):
 
         return result
     
+    def plot_boxes(self, img: np.ndarray, pred_boxes: BoundingBoxes) -> np.ndarray:
+        names = pred_boxes.names
+        annotator = Annotator(img)
+
+        if pred_boxes:
+            for d in reversed(pred_boxes):
+                c, conf = int(d.cls), float(d.conf)
+                label = f'{names[c]} {conf:.2f}'
+                annotator.box_label(d.xyxy.squeeze(), label, color=colors(c, True))
+
+        return annotator.im
