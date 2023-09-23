@@ -8,7 +8,7 @@ class VideoStream(ABC):
         pass
     
     @abstractmethod
-    def isOpened(self):
+    def is_opened(self):
         pass
 
     @abstractmethod
