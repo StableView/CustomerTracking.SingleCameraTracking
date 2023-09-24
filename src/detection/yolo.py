@@ -11,15 +11,15 @@ from src.detection.boxes import BoundingBoxes
 
 class Yolov8(ObjectDetection):
     """Yolov8 sub-class"""
-    def __init__(self, model_path: str):
-        super().__init__(model_path)
-    
+
     def load_model(self, model_path) -> YOLO:
+        """Load YoloV8 object"""
         model = YOLO(model_path)
         model.fuse()
         return model
-    
+
     def predict(self,frame: np.ndarray) -> np.ndarray:
+        """Inference return a np array"""
         preds = self.model(frame)[0]
         result = preds.boxes.data.clone()
         result = result[:, [5, 4, 0, 1, 2, 3]]
@@ -31,6 +31,7 @@ class Yolov8(ObjectDetection):
 
         return result.numpy()
 
-    def predict_to_BoundingBoxes(self,frame: np.ndarray) -> np.ndarray:
+    def predict_to_BoundingBoxes(self,frame: np.ndarray) -> BoundingBoxes:
+        """Inference return a BoundingBoxes object"""
         result = self.predict(frame)
         return BoundingBoxes(frame, result, self.model.model.names)

@@ -62,17 +62,18 @@ class Annotator:
 colors = Colors()
 
 class Draw():
-
+    """Drawing class for bounding boxes"""
     @staticmethod
     def plot_boxes(pred_boxes: BoundingBoxes) -> np.ndarray:
+        """Plot Predictions"""
         names = pred_boxes.names
         annotator = Annotator(pred_boxes.orig_img)
 
         if pred_boxes:
-            for d in reversed(pred_boxes):
-                c, conf = int(d.cls), float(d.conf)
-                label = f'{names[c]} {conf:.2f}'
-                annotator.box_label(d.xyxy.squeeze(), label, color=colors(c, True))
+            for pred in reversed(pred_boxes):
+                pred_class, conf = int(pred.cls), float(pred.conf)
+                label = f'{names[pred_class]} {conf:.2f}'
+                annotator.box_label(pred.xyxy.squeeze(), label, color=colors(pred_class, True))
 
         return annotator.image
     
