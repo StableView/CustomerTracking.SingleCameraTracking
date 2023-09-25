@@ -14,11 +14,16 @@ logging.basicConfig(filename=log_filename, level=logging.INFO, format='%(asctime
 
 if __name__ == "__main__":
     detectionLst = [
-        DetectionMsg(cv2.imread('src/data/eg_CASIA_bag.png'),  np.array([[ 50, 200, 120, 210 ]])),
-        DetectionMsg(cv2.imread('src/data/eg_CASIA_coat.png'), np.array([[ 45, 200, 135, 210 ]])),
+        DetectionMsg(cv2.imread('src/data/eg_CASIA_bag.png'),  np.array([[1, 0.9, 50, 200, 120, 210 ]])),
+        DetectionMsg(cv2.imread('src/data/eg_CASIA_coat.png'), np.array([[1, 0.9, 45, 200, 135, 210 ]])),
         DetectionMsg(
             cv2.imread('src/data/people.png'), 
-            np.array([[10, 170, 0, 50], [5, 185, 45, 120], [40, 215, 125, 215], [40, 205, 190, 275]])
+            np.array([
+                [1, 0.6, 10, 170,   0,  50], 
+                [2, 0.9,  5, 185,  45, 120], 
+                [3, 0.9, 40, 215, 125, 215],
+                [4, 0.9, 40, 205, 190, 275]
+            ])
         )
     ]
 

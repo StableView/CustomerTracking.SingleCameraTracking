@@ -12,7 +12,7 @@ class MPPoseFeatureExtractor(FeatureExtractorBase):
     def extract_features(self, frame: DetectionMsg):
         output = []
         for bbox in frame.boxes:
-            img = frame.image[bbox[0]:bbox[1], bbox[2]:bbox[3]]
+            img = frame.image[int(bbox[2]):int(bbox[3]), int(bbox[4]):int(bbox[5])]
             results = self.pose.process(img)
             rpose = [] if (results.pose_landmarks == None) \
                 else [[ii.x, ii.y, ii.z, ii.visibility] for ii in results.pose_landmarks.landmark]

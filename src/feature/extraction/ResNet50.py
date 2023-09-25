@@ -12,7 +12,7 @@ class ResNet50FeatureExtractor(FeatureExtractorBase):
     def extract_features(self, frame: DetectionMsg):
         output = []
         for bbox in frame.boxes:
-            img = Image.fromarray(frame.image[bbox[0]:bbox[1], bbox[2]:bbox[3]])
+            img = Image.fromarray(frame.image[int(bbox[2]):int(bbox[3]), int(bbox[4]):int(bbox[5])])
             result = self.img2vec.get_vec(img, tensor=False)
             output.append(result)
         return output
