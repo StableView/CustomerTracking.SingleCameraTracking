@@ -1,6 +1,6 @@
 import mediapipe as mp
-from src.detection.DetectionMsg import DetectionMsg
-from src.feature.extraction.FeatureExtractor import FeatureExtractorBase
+from src.detection.detection_msg import DetectionMsg
+from src.feature.extraction.feature_extractor import FeatureExtractorBase
 
     
 class MPPoseFeatureExtractor(FeatureExtractorBase):

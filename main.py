@@ -1,9 +1,9 @@
 import cv2
 import numpy as np
-from src.detection.DetectionMsg import DetectionMsg
+from src.detection.detection_msg import DetectionMsg
 from src.feature.controller import FeatureController
-from src.feature.extraction.MPPose import MPPoseFeatureExtractor
-from src.feature.extraction.ResNet50 import ResNet50FeatureExtractor
+from src.feature.extraction.mp_pose import MPPoseFeatureExtractor
+from src.feature.extraction.resnet50 import ResNet50FeatureExtractor
 import logging
 
 
