@@ -31,7 +31,7 @@ class Yolov8(ObjectDetection):
 
         return result.numpy()
 
-    def predict_to_BoundingBoxes(self,frame: np.ndarray) -> BoundingBoxes:
+    def predict_to_boundingboxes(self,frame: np.ndarray) -> BoundingBoxes:
         """Inference return a BoundingBoxes object"""
         result = self.predict(frame)
         return BoundingBoxes(frame, result, self.model.model.names)
