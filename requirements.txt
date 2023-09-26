@@ -1,0 +1,7 @@
+# requirements.txt
+
+# Dependencias generales
+numpy==1.25.2
+mediapipe>=0.8.6
+img2vec-pytorch==1.0.1
+Pillow==10.0.0
