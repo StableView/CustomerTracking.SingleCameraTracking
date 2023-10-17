@@ -23,6 +23,7 @@ class Yolov8(ObjectDetection):
         preds = self.model(frame)[0]
         result = preds.boxes.data.clone()
         result = result[:, [5, 4, 0, 1, 2, 3]]
+        result = result[result[:, 0] == 0.0]
         #result = torch.jit._unwrap_optional(result)
         if self.device == 'cuda':
             result.cuda()
