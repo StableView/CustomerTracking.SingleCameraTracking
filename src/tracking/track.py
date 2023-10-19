@@ -1,7 +1,7 @@
 import numpy as np
 
 from src.tracking.strongsort.strongsort_kf_adapter import StrongSortKalmanFilterAdapter
-from src.utils.ops import xyxy2xyah, xyxy2tlwh
+from src.utils.ops import xyxy2xyah
 
 
 class TrackState:
@@ -75,7 +75,7 @@ class Track:
         ema_alpha,
     ):
         self.id = id
-        self.bbox = xyxy2xyah(xyxy2tlwh(detection[3:7]))
+        self.bbox = xyxy2xyah(detection[3:7])
         self.conf = detection[2]
         self.cls = detection[1]
         self.det_ind = detection[0]
@@ -113,7 +113,7 @@ class Track:
         return ret
 
     def to_tlbr(self):
-        """Get kf estimated current position in bounding box format `(min x, miny, max x,
+        """Get kf estimated current position in bounding box format `(min x, min y, max x,
         max y)`.
 
         Returns
@@ -157,7 +157,7 @@ class Track:
         detection : Detection
             The associated detection.
         """
-        self.bbox = xyxy2xyah(xyxy2tlwh(detection[3:7]))
+        self.bbox = xyxy2xyah(detection[3:7])
         self.conf = detection[2]
         self.cls = detection[1]
         self.det_ind = detection[0]
