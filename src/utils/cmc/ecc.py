@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-from src.tracking.strongsort.cmc_interface import CMCInterface
+from src.utils.cmc.cmc_interface import CMCInterface
 
 
 class ECC(CMCInterface):
