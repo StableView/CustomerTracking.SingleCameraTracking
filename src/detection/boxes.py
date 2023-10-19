@@ -27,7 +27,7 @@ class BoundingBoxes:
     @property
     def xyxy(self) -> np.ndarray:
         """Return the boxes in xyxy format."""
-        return self.data[:, 2:]
+        return self.data[:, 3:]
     
     @property
     def xywh(self) -> np.ndarray:
@@ -37,11 +37,16 @@ class BoundingBoxes:
     @property
     def conf(self) -> np.ndarray:
         """Return the confidence values of the boxes."""
-        return self.data[:, 1]
+        return self.data[:, 2]
 
     @property
     def cls(self) -> np.ndarray:
         """Return the class values of the boxes."""
+        return self.data[:, 1]
+    
+    @property
+    def id(self) -> np.ndarray:
+        """Return the id values of the boxes."""
         return self.data[:, 0]
     
     @property
