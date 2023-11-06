@@ -1,6 +1,6 @@
 import numpy as np
 from statistics import mean 
-from src.feature.position_msg import PositionMsg
+from src.feature.position_msg import PositionMsg, PositionType
 from src.feature.feet.position_extractor import PositionExtractorBase
 
 LANDMARKS = 33
@@ -14,10 +14,10 @@ class MPPosePositionExtractor(PositionExtractorBase):
         super().__init__()
 
     def extract_features(self, frame: list):
-        output = PositionMsg(boxes=[], type='Normal')
+        output = PositionMsg(boxes=[], type=PositionType.NORMAL)
 
         if (len(frame) != LANDMARKS):
-            output.type = 'Bad'
+            output.type = PositionType.BAD
             return output
         else:
             visibility_left_shoulder = frame[11][3] > THR_VISIBILITY
@@ -25,11 +25,11 @@ class MPPosePositionExtractor(PositionExtractorBase):
             visibility_legs = not any(landmark[3] < THR_VISIBILITY for landmark in frame[22:32])
 
             if not (visibility_legs and visibility_left_shoulder and visibility_right_shoulder):
-                output.type = 'Estimated'
+                output.type = PositionType.ESTIMATED
 
             # ankle
             if (frame[27][3] > THR_VISIBILITY and frame[28][3] > THR_VISIBILITY):
-                output.type = 'Normal'
+                output.type = PositionType.NORMAL
                 output.boxes = np.array([mean([frame[27][0], frame[28][0]]), mean([frame[27][1], frame[28][1]])])
                 return output
             
