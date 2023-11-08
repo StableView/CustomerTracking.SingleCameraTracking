@@ -14,12 +14,13 @@ class MPPosePositionExtractor(PositionExtractorBase):
         super().__init__()
 
     def extract_features(self, frame: list):
-        output = PositionMsg(boxes=[], type=PositionType.NORMAL)
+        output = PositionMsg(boxes=[], type=PositionType.BAD)
 
         if (len(frame) != LANDMARKS):
             output.type = PositionType.BAD
             return output
         else:
+            output.type = PositionType.NORMAL
             visibility_left_shoulder = frame[11][3] > THR_VISIBILITY
             visibility_right_shoulder = frame[12][3] > THR_VISIBILITY
             visibility_legs = not any(landmark[3] < THR_VISIBILITY for landmark in frame[22:32])
