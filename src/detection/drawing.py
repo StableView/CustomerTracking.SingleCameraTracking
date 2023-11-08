@@ -71,8 +71,8 @@ class Draw():
 
         if pred_boxes:
             for pred in reversed(pred_boxes):
-                pred_class, conf = int(pred.cls), float(pred.conf)
-                label = f'{names[pred_class]} {conf:.2f}'
+                id, pred_class, conf = int(pred.id), int(pred.cls), float(pred.conf)
+                label = f'{id} {names[pred_class]} {conf:.2f}'
                 annotator.box_label(pred.xyxy.squeeze(), label, color=colors(pred_class, True))
 
         return annotator.image
