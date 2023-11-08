@@ -1,6 +1,15 @@
 import cv2
 import numpy as np
 
+FONT_SCALE = 0.8
+THICKNESS = 2
+RED_COLOR = (0,0,255)
+WHITE_COLOR = (255,255,255)
+YELLOW_COLOR = (0, 255, 255)
+POINT_TEXT1 = (5,20)
+POINT_TEXT2 = (5,50)
+POINT_ORIGIN_RECTANGLE = (0,0)
+
 class GetPointsCameras:
     def __init__(self) -> None:
         self.points_reference: list = []
@@ -20,7 +29,7 @@ class GetPointsCameras:
         r = h / w
         self.image_concat = cv2.resize(self.image_concat,(int(self.image_height/r),self.image_height))
         text = "Press p to save the points or ESC to exit."
-        cv2.putText(self.image_concat, text, (5,20), fontFace = cv2.FONT_HERSHEY_SIMPLEX , fontScale = 0.8, color = (0,0,255), thickness=2)
+        cv2.putText(self.image_concat, text, POINT_TEXT1, fontFace = cv2.FONT_HERSHEY_SIMPLEX , fontScale = FONT_SCALE, color = RED_COLOR, thickness=THICKNESS)
             
         cv2.namedWindow(winname = win_name) 
         cv2.setMouseCallback(win_name, self.capture_points) 
@@ -43,9 +52,9 @@ class GetPointsCameras:
                     text = "You must select at least 4 points,"
                     text2 = "press ENTER to continue or ESC to exit."
                     image_copy = self.image_concat.copy()
-                    cv2.rectangle(image_copy,(0,0),(w,60),(255,255,255),-1)
-                    cv2.putText(image_copy, text, (5,20), fontFace = cv2.FONT_HERSHEY_SIMPLEX , fontScale = 0.8, color = (0,0,255), thickness=2)
-                    cv2.putText(image_copy, text2, (5,50), fontFace = cv2.FONT_HERSHEY_SIMPLEX , fontScale = 0.8, color = (0,0,255), thickness=2)
+                    cv2.rectangle(image_copy,POINT_ORIGIN_RECTANGLE,(w,60),WHITE_COLOR,-1)
+                    cv2.putText(image_copy, text, POINT_TEXT1, fontFace = cv2.FONT_HERSHEY_SIMPLEX , fontScale = FONT_SCALE, color = RED_COLOR, thickness=THICKNESS)
+                    cv2.putText(image_copy, text2, POINT_TEXT2, fontFace = cv2.FONT_HERSHEY_SIMPLEX , fontScale = FONT_SCALE, color = RED_COLOR, thickness=THICKNESS)
                     cv2.imshow(win_name, image_copy)
                     key = cv2.waitKey(0)
                     if key == 27:
@@ -58,9 +67,9 @@ class GetPointsCameras:
                     text = "The number of points selected in both images must match,"
                     text2 = "press ENTER to continue or ESC to exit."
                     image_copy = self.image_concat.copy()
-                    cv2.rectangle(image_copy,(0,0),(w,60),(255,255,255),-1)
-                    cv2.putText(image_copy, text, (5,20), fontFace = cv2.FONT_HERSHEY_SIMPLEX , fontScale = 0.8, color = (0,0,255), thickness=2)
-                    cv2.putText(image_copy, text2, (5,50), fontFace = cv2.FONT_HERSHEY_SIMPLEX , fontScale = 0.8, color = (0,0,255), thickness=2)
+                    cv2.rectangle(image_copy,POINT_ORIGIN_RECTANGLE,(w,60),WHITE_COLOR,-1)
+                    cv2.putText(image_copy, text, POINT_TEXT1, fontFace = cv2.FONT_HERSHEY_SIMPLEX , fontScale = FONT_SCALE, color = RED_COLOR, thickness=THICKNESS)
+                    cv2.putText(image_copy, text2, POINT_TEXT2, fontFace = cv2.FONT_HERSHEY_SIMPLEX , fontScale = FONT_SCALE, color = RED_COLOR, thickness=THICKNESS)
                     cv2.imshow(win_name, image_copy)
                     key = cv2.waitKey(0)
                     if key == 27:
@@ -95,12 +104,12 @@ class GetPointsCameras:
             if (self.state == 0) & (self.x <= w_reference):
                 radius =5
                 text = str(len(self.points_reference))
-                cv2.putText(self.image_concat, text, (x,y), fontFace = cv2.FONT_HERSHEY_COMPLEX, fontScale = 1.0, color = (0,0,255))
-                cv2.circle(self.image_concat, (x, y), radius,(0, 255, 255),-1) 
+                cv2.putText(self.image_concat, text, (x,y), fontFace = cv2.FONT_HERSHEY_COMPLEX, fontScale = FONT_SCALE, color = RED_COLOR)
+                cv2.circle(self.image_concat, (x, y), radius,YELLOW_COLOR,-1) 
                 self.points_reference.append((self.x,self.y))
             if (self.state == 2) & (self.x > w_camera) & (len(self.points_camera) < len(self.points_reference)):
                 radius =5
                 text = str(len(self.points_camera))
-                cv2.putText(self.image_concat, text, (x,y), fontFace = cv2.FONT_HERSHEY_COMPLEX, fontScale = 1.0, color = (0,0,255))
-                cv2.circle(self.image_concat, (x, y), radius,(0, 255, 255),-1) 
+                cv2.putText(self.image_concat, text, (x,y), fontFace = cv2.FONT_HERSHEY_COMPLEX, fontScale = FONT_SCALE, color = RED_COLOR)
+                cv2.circle(self.image_concat, (x, y), radius,YELLOW_COLOR,-1) 
                 self.points_camera.append((self.x-w_camera,self.y))
